@@ -1,55 +1,35 @@
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
-const queryString = window.location.search;
-const url = new URL(window.location.href);
 
-let size = 40 // 40 pixels per metre
-class obje {
-    static counter = 0;
+let size = 40; // 40 pixels per metre
 
-    constructor(name, data) { 
-        this.id = ++obje.counter; 
-        
-        this.data = data;
-    }
+let objects = [{"type":"circle","mass":100,"size":1,"x":50,"y":50,"id":1}];
 
-    
 
-}
-
-let objects = [new obje({"type":"circle","mass":100,"size":1,"x":50,"y":50})]
-
-// 3. Function to update canvas drawing resolution
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    
-    // Re-render graphics here (resizing clears the canvas)
     draw();
 }
-// 4. Sample draw function
+
 function draw() {
+    ctx.fillStyle = "white";
+    ctx.fillRect(0,0,canvas.width, canvas.height);
     // 1 size = 1 metre. 1 mass = 1 gram. 
     // position is drawn at the centre of gravity.
-    for (object in objects){
-        if (object.data.type == "circle"){
+    ctx.fillStyle = "green";
+    for(let i = 0; i < objects.length; i++) {
+        let object = objects[i];
+        if (object.type == "circle"){
             // the radius is equal to the size
             ctx.beginPath();
-            ctx.arc(object.data.x, object.data.y, object.data.size, 0, 2 * Math.PI); // draws a circle :)
-            ctx.stroke();
-        } else {
-                url.searchParams.set("error", "unknown-type");
-                window.location.href = url.toString();
+            ctx.arc(object.x, object.y, object.size*size, 0, 2 * Math.PI); // draws a circle :)
+            ctx.fill();
         }
     }
 }
 
-// 5. Initialize and listen for window resizing
-if (queryString == ""){
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-} else {
-    resizeCanvas();
-    ctx.font = "50px serif";
-    ctx.strokeText("ERROR!!!", 50, 90);
-}
+
+document.getElementById("tick").addEventListener('click', function(){
+    draw();
+});
